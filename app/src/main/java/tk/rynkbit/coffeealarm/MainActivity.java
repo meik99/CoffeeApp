@@ -5,6 +5,8 @@ import android.app.TimePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -20,6 +22,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private static final String URL = "http://10.0.0.4:5000/";
 
     private TextView txtCurrentTime;
+    private Switch switchOnOff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,20 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         txtCurrentTime = (TextView) findViewById(R.id.txtCurrentTime);
+        switchOnOff = (Switch) findViewById(R.id.switchOnOff);
+        switchOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == false){
+                    StringRequest request = new StringRequest(
+                            Request.Method.DELETE, URL, MainActivity.this, MainActivity.this
+                    );
+                    Volley.newRequestQueue(MainActivity.this).add(request);
+                }else{
+                    setTime(txtCurrentTime);
+                }
+            }
+        });
         getCurrentTime();
     }
 
@@ -64,7 +83,17 @@ public class MainActivity extends AppCompatActivity
             time = "Not set";
         }
 
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         txtCurrentTime.setText(time);
+
+        try {
+            sdf.parse(time);
+            switchOnOff.setChecked(true);
+            switchOnOff.setText("On");
+        } catch (ParseException e) {
+            switchOnOff.setChecked(false);
+            switchOnOff.setText("Off");
+        }
     }
 
     public void setTime(View view) {
