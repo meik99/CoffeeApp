@@ -94,9 +94,10 @@ public class AlarmDialog extends Dialog implements View.OnClickListener {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        System.out.println(error.getMessage());
+                        System.err.println(error.getMessage());
                     }
                 }
         ));
+        queue.start();
     }
 }

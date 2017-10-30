@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -32,12 +34,16 @@ import tk.rynkbit.coffeealarm.entity.Alarm;
 
 public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.AlarmViewHolder> {
     private final Context mContext;
-    private final List<Alarm> mAlarms;
+    private List<Alarm> mAlarms;
 
     public ListAlarmAdapter(Context context) {
         this.mContext = context;
+        updateAlarms();
+    }
 
+    public void updateAlarms(){
         mAlarms = getAlarms();
+        notifyDataSetChanged();
     }
 
     private List<Alarm> getAlarms() {
@@ -98,6 +104,7 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.Alar
                     alarm.getHour() + ":" + alarm.getMinute()
             );
             holder.chkAlarmItemOnOff.setChecked(true);
+            holder.alarmId = alarm.getId();
         }
     }
 
@@ -106,10 +113,11 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.Alar
         return mAlarms.size();
     }
 
-    class AlarmViewHolder extends RecyclerView.ViewHolder {
+    class AlarmViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         TextView txtAlarmItemName;
         TextView txtAlarmItemTime;
         Switch chkAlarmItemOnOff;
+        String alarmId;
 
         public AlarmViewHolder(View itemView) {
             super(itemView);
@@ -117,6 +125,34 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.Alar
             txtAlarmItemName = (TextView) itemView.findViewById(R.id.txtItemAlarmName);
             txtAlarmItemTime = (TextView) itemView.findViewById(R.id.txtItemAlarmTime);
             chkAlarmItemOnOff = (Switch) itemView.findViewById(R.id.chkItemAlarmOnOff);
+
+            itemView.setLongClickable(true);
+            itemView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+            requestQueue.add(
+                    new StringRequest(
+                            Request.Method.DELETE,
+                            "http://192.168.43.215:8080/api/coffee/" + alarmId,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                    System.out.println(response);
+                                    updateAlarms();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    System.err.println(error.getMessage());
+                                }
+                            })
+            );
+            requestQueue.start();
+            return false;
         }
     }
 }

@@ -2,6 +2,7 @@ package tk.rynkbit.coffeealarm;
 
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,18 +41,21 @@ public class MainActivity extends AppCompatActivity{
 
     RecyclerView listAlarms;
     Button btnAlarmAdd;
+    private ListAlarmAdapter listAlarmsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listAlarmsAdapter = new ListAlarmAdapter(getApplicationContext());
+
         btnAlarmAdd = (Button) findViewById(R.id.btnAlarmAdd);
         listAlarms = (RecyclerView) findViewById(R.id.listAlarm);
         listAlarms.setLayoutManager(
                 new LinearLayoutManager(
                         getApplicationContext(), LinearLayoutManager.VERTICAL, false));
-        listAlarms.setAdapter(new ListAlarmAdapter(getApplicationContext()));
+        listAlarms.setAdapter(listAlarmsAdapter);
 
         btnAlarmAdd.setOnClickListener(getAddAlarmClickListener());
     }
@@ -61,6 +65,12 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Dialog dialog = new AlarmDialog(MainActivity.this);
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        listAlarmsAdapter.updateAlarms();
+                    }
+                });
                 dialog.show();
             }
         };
