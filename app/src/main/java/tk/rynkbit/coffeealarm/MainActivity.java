@@ -64,13 +64,7 @@ public class MainActivity extends AppCompatActivity{
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dialog dialog = new AlarmDialog(MainActivity.this);
-                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialogInterface) {
-                        listAlarmsAdapter.updateAlarms();
-                    }
-                });
+                Dialog dialog = new AlarmDialog(MainActivity.this, listAlarmsAdapter);
                 dialog.show();
             }
         };

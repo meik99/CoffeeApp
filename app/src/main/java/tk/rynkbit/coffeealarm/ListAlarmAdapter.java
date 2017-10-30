@@ -57,17 +57,20 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.Alar
                     public void onResponse(JSONArray response) {
                         for(int i = 0; i < response.length(); i++){
                             String id;
-                            String name;
+                            String name = null;
                             int hour;
                             int minute;
 
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
+                                if(jsonObject.has("name")){
+                                    name = jsonObject.getString("name");
+                                }
+
                                 id = jsonObject.getString("_id");
-                                name = jsonObject.getString("name");
                                 hour = jsonObject.getInt("hour");
                                 minute = jsonObject.getInt("minute");
-                                result.add(new Alarm(id, name, hour, minute));
+                                result.add(new Alarm(id, name == null ? "" : name, hour, minute));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
