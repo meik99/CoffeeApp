@@ -4,4 +4,6 @@
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
     <string name="name">Name</string>
+    <string name="make_coffee">Make Coffee</string>
+    <string name="refresh">Refresh</string>
 </resources>

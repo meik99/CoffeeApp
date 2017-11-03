@@ -7,16 +7,16 @@
     android:layout_marginBottom="4dp"
     android:layout_marginStart="4dp"
     app:cardCornerRadius="4dp"
-    android:theme="@style/Theme.AppCompat.Light">
+    >
 
     <LinearLayout
-        android:theme="@style/Theme.AppCompat.Light"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <LinearLayout
-            android:theme="@style/Theme.AppCompat.Light"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
@@ -26,14 +26,14 @@
             <TextView
                 android:id="@+id/txtItemAlarmTime"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:theme="@style/Theme.AppCompat.Light"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="4dp" />
 
             <TextView
-                android:theme="@style/Theme.AppCompat.Light"
+
                 android:id="@+id/txtItemAlarmName"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:layout_width="wrap_content"
@@ -44,7 +44,6 @@
         </LinearLayout>
 
         <Switch
-            android:theme="@style/Theme.AppCompat.Light"
             android:id="@+id/chkItemAlarmOnOff"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
